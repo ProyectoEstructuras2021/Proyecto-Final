@@ -1,0 +1,1211 @@
+- > Agregaré el código de las clases que se reutilizarán < -
+
+---------------------------------------------------------[ Cola.H ]---------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <time.h>
+using namespace std;
+class Cola
+{
+    	
+	private:
+		
+		//Arreglo de nombres privados
+		
+		string nombres[20]={"Isabel Barrios", "Jose Castanio", "Socorro Bermejo", "Imanol Calle", "Gloria Domenech", "Nicolai Baez", "Amina Borja", 
+    	"Claudio Lopez", "Maria Farre", "Mohamed Castanieda", "Sabrina Arce", "Dunia de La Rosa", "Vicenta Gonzalo", "Gael Navarro", "Jesus Marques", 
+    	"Maria Ripoll", "Augusto Borrego", "Beatriz Piniero", "Adria Amaya", "Hombre Invisible"};
+	
+		//Variables
+		
+		string cola[150];
+		int fondo;
+		int tope;
+		int cima;
+		int indice;
+		
+		//MÃ©todos
+		
+
+		
+	public:
+		
+		//MÃ©todos
+		
+		void inicializar(){
+			cima = 0;
+			fondo = 0;
+			indice = 0;
+			tope = 150;
+		}
+		
+		int push(string dato){
+			if(colaLlena() != true){
+				cola[cima] = dato;
+				cima = cima+1;
+				return 0;
+			} else
+				return -1;
+		}
+		
+		int pop(){
+			if(colaVacia() != true){
+				string dato;
+				dato = cola[fondo];
+				cima--;
+				reorganizar(indice);
+			} else
+				return -1;
+		}
+		
+		void limpiarCola() {
+			if(colaVacia()) // caso base
+				return;
+			// caso general
+			else {
+				cola[cima-1] = "";
+				cima--;
+				limpiarCola();
+			}
+		}
+		bool colaLlena(){
+			if(cima > tope)
+				return true;
+			else
+				return false;
+		}
+		
+		bool colaVacia(){
+			if (cima == fondo)
+				return true;
+			else
+				return false;
+		}
+		
+		void reorganizar (int indice){
+			//Caso base
+			if(indice == cima){
+			//	cola[cima] = -1;
+			//	indice = 0;
+				return;
+			}
+			//Caso general
+			else{
+				cola[indice] = cola[indice+1];
+				reorganizar(indice+1);
+			}
+		}
+		
+		string nombreAleatorio(){
+			srand(time(NULL));
+			int nombre = 1+rand()% 20;
+			return nombres[nombre];
+		}
+
+		int llegadaCliente(){
+	    	srand(time(NULL));
+			int t1 = 2 + rand() % 3;
+	    	return t1;
+		}
+	
+		int salidaCliente(){
+	    	srand(time(NULL));
+	    	int t2 = 3 + rand() % 3;
+			return t2;
+		}
+		
+		int mostrarCima(){
+			return cima;
+		}
+		
+		string mostrarPersona(int num){
+			return cola[num];
+		}
+		
+		string mostrarCola(){
+			string salida = "";
+			for (int i=0; i<mostrarCima(); i++){
+				salida = salida + cola[i] + ", ";
+			}
+			return salida;
+		}
+		
+		
+};
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------[ Listas ]---------------------------------------------------------------
+                                                      
+                                                      - > L I S T A < -
+#include <iostream>
+#include <time.h>
+#include "NodoCE.h"
+
+/* Opciones que contendrá el menú de la Lista:
+    vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+    >    1.  Registrar Estudiante          <
+    >    2.  Actualizar Estudiante          <
+    >    3.  Registrar calificación         <
+    >    4.  Actualizar calificación        <
+    >    5.  Buscar estudiante              <
+    >    6.  Eliminar estudiante            <
+    >    7.  Mostrar listado de estudiantes <
+    >    8.  Mostrar calificaciones         <
+    >    9.  Mostrar reporte final          <
+    >    10. Salir                          <
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*/
+
+using namespace std;
+
+class ListaCE{
+
+    private:
+
+        NodoCE *start;
+
+    public:
+
+        void inicializarLista(){
+            start = NULL;
+        }
+
+        bool listaVacia(){
+            if(start == NULL)
+                return true;
+            else
+                return false;
+        }
+
+        void registrarEstudiante(string matriculaE, string nombreE, string apPaternoE, string apMaternoE){
+            NodoCE *nodoNuevo, *nodoAuxiliar;
+            nodoNuevo = nodoNuevo->crearNodo(matriculaE, nombreE, apPaternoE, apMaternoE);
+                
+            //cout<<"			--> Registrar Estudiante <-- 			"<<endl;
+			    
+				if(listaVacia()){
+                    nodoNuevo->obtieneSiguiente() == NULL;
+                    start = nodoNuevo;
+                    nodoNuevo = NULL;
+                } 
+                else{
+                    nodoAuxiliar = start;
+	                    while(nodoAuxiliar->obtieneSiguiente() != NULL){
+	                        nodoAuxiliar = nodoAuxiliar->obtieneSiguiente();
+	                    }
+                    nodoNuevo->obtieneSiguiente() == NULL;
+                    nodoAuxiliar->conectar(nodoNuevo);
+                    nodoAuxiliar = NULL;
+                    nodoNuevo = NULL;
+                }
+        }
+
+        void actualizarEstudiante(string matriculaE){
+        	
+        	NodoCE *nodoAuxiliar;
+        	
+        	string matriculaE_;
+        	string nombreE;
+        	string apPaternoE;
+        	string apMaternoE;
+        	double calificacion;
+        	
+        	if(listaVacia())
+        		cout<<"No hay ningun estudiante registrado, la lista esta vacia . . ."<<endl;
+        	else{
+        		nodoAuxiliar = start;
+	        		while(nodoAuxiliar != NULL){
+	        			if(nodoAuxiliar->getDato() == matriculaE){
+	        				//cout<<"				--> Actualizar Estudiante <--				"<<endl;
+	        				cout<<"\nSeleccione cual de los datos desea actualizar: \n > 1. Matricula \n > 2. Nombre \n > 3. Apellido Paterno \n > 4. Apellido Materno"<<endl;
+	        				int opc;
+							cin>>opc;
+							switch (opc){
+								case 1: 
+									cout<<" 			-> Matricula del Estudiante <-				 \n> Digite de manera correcta la matricula del estudiante: "<<endl;
+									cin>>matriculaE_;
+									nodoAuxiliar->setDato(matriculaE_);
+									break;
+								case 2: 
+									cout<<" 			-> Nombre del Estudiante <-				 \n > Digite de manera correcta el nombre del estudiante: "<<endl;
+									cin>>nombreE;
+									nodoAuxiliar->setNombreE(nombreE);
+									break;
+								case 3:
+									cout<<" 			-> Apellido Paterno del Estudiante <-				 \n > Digite de manera correcta el apellido paterno del estudiante: "<<endl;
+									cin>>apPaternoE;
+									nodoAuxiliar->setApPaternoE(apPaternoE);
+									break;
+								case 4:
+									cout<<" 			-> Apellido Materno del Estudiante <-				 \n > Digite de manera correcta el apellido materno del estudiante: "<<endl;
+									cin>>apMaternoE;
+									nodoAuxiliar->setApMaternoE(apMaternoE);
+									break;
+							}
+						}
+						
+						nodoAuxiliar = nodoAuxiliar->obtieneSiguiente();
+					}
+			}
+
+        }
+
+        void registrarCalificacion(string matriculaE){
+
+            NodoCE *nodoAuxiliar;
+            double calificacion;
+            
+                if(listaVacia())
+                    cout<<"No hay ningun estudiante registrado, la lista esta vacia . . ."<<endl;
+                else{
+                    nodoAuxiliar = start;
+                    cout<<"				--> Registrar Calificación <--				\n"<<endl;
+	                    while(nodoAuxiliar != NULL){
+	                        if(nodoAuxiliar->getDato() == matriculaE){
+	                        	//cout<<"				--> Registrar Calificación <--				\n"<<endl;
+	                            cout<<"> Matricula: "<<nodoAuxiliar->getDato()<<endl;
+	                            cout<<"> Estudiante: "<<nodoAuxiliar->getNombreE()<<" "<<nodoAuxiliar->getApPaternoE()<<" "<<nodoAuxiliar->getApMaternoE()<<endl;
+	                            cout<<"\n\n                         *NOTA: Recordar que la calificacion puede incluir decimales!\n\n";
+	                            cout<<"Digitar la calificacion correspondiente: "<<endl;
+	                            cin>>calificacion;
+	                            nodoAuxiliar->setCalificacion(calificacion);
+	                        }
+	                        nodoAuxiliar = nodoAuxiliar->obtieneSiguiente();
+	                    }
+                }
+
+        }
+
+        void actualizarCalificacion(string matriculaE){
+			
+			NodoCE *nodoAuxiliar;
+			double calificacion;
+			
+			if(listaVacia())
+				cout<<"No hay ningun estudiante registrado, la lista esta vacia . . ."<<endl;
+			else{
+				nodoAuxiliar = start;
+				cout<<" 			--> Actualizar calificacion <-- 			"<<endl;
+					while(nodoAuxiliar != NULL){
+						if(nodoAuxiliar->getDato() == matriculaE && nodoAuxiliar->getCalificacion() != -1){
+							cout<<"> Matricula: "<<nodoAuxiliar->getDato()<<endl;
+	                        cout<<"> Estudiante: "<<nodoAuxiliar->getNombreE()<<" "<<nodoAuxiliar->getApPaternoE()<<" "<<nodoAuxiliar->getApMaternoE()<<endl;
+							cout<<"\n\n                         *NOTA: Recordar que la calificacion puede incluir decimales!\n\n";
+	                        cout<<"Digitar la calificacion correspondiente: "<<endl;
+	                        cin>>calificacion;
+						} else {
+							cout<<"El estudiante"<<nodoAuxiliar->getNombreE()<<" aun no cuenta con una calificacion establecida. . ."<<endl;
+						}
+						nodoAuxiliar = nodoAuxiliar->obtieneSiguiente();
+					}
+			}
+        }
+
+        void buscarEstudiante(string matriculaE){
+
+			NodoCE *nodoAuxiliar;
+			
+				if(listaVacia())
+					cout<<"No hay ningun estudiante registrado, la lista esta vacia . . ."<<endl;
+				else{
+					nodoAuxiliar = start;
+					cout<<"			--> Buscar Estudiante <--			"<<endl;
+						while(nodoAuxiliar != NULL){
+							if(nodoAuxiliar->getDato() == matriculaE){
+								//cout<<"			--> Buscar Estudiante <--			"<<endl;
+								cout<<"\n> Matricula: "<<nodoAuxiliar->getDato()<<"\n> Nombre: "<<nodoAuxiliar->getNombreE()<<"\n> Apellido Paterno: "<<nodoAuxiliar->getApPaternoE()<<"\n> Apellido Materno: "<<nodoAuxiliar->getApMaternoE()<<endl;
+								if(nodoAuxiliar->getCalificacion() != -1){
+									cout<<"> Calificacion:"<<nodoAuxiliar->getCalificacion()<<endl;
+										if(nodoAuxiliar->getCalificacion() < 7){
+											cout<<"				* ATENCION *			\nEstudiante con situación probable de reprobar!"<<endl;
+										} else if(nodoAuxiliar->getCalificacion() <= 6) {
+											cout<<"				* ATENCION *			\nEstudiante en repite!"<<endl;
+										}
+								}
+								if(nodoAuxiliar->obtieneSiguiente() == NULL){
+									cout<<"Ya no hay mas estudiantes, es el final de la lista. . ."<<endl;
+								}
+							}
+							nodoAuxiliar = nodoAuxiliar->obtieneSiguiente();
+						}
+					
+				}
+			
+        }
+
+        void eliminarEstudiante(string matriculaE){		
+        	
+        	NodoCE *nodoEliminar, *nodoAuxiliar;
+        	bool flag = false;					// se declara una variable bool que sea falsa
+        	
+        		if(listaVacia())
+        			cout<<"No hay ningun estudiante registrado, la lista esta vacia . . ."<<endl;
+        		else{
+        			nodoEliminar = start;
+        			cout<<"			--> Eliminar Estudiante <--			"<<endl;
+        				
+						while(nodoEliminar->obtieneSiguiente() != NULL && nodoEliminar->getDato() != matriculaE){
+        					nodoAuxiliar = nodoEliminar;
+        					nodoEliminar = nodoEliminar->obtieneSiguiente();
+        					flag = true;
+						}
+						
+						if(flag==false){
+							start = start->obtieneSiguiente();
+        					cout<<"Estudiante eliminado exitosamente!"<<endl;
+							delete nodoEliminar;
+						} else {
+							nodoAuxiliar->conectar(nodoEliminar->obtieneSiguiente());
+        					cout<<"Estudiante eliminado exitosamente!"<<endl;
+							delete nodoEliminar;
+						}
+				}
+        	
+        	
+
+        }
+
+        void mostrarListadoDeEstudiantes(){
+        	
+        	NodoCE *nodoAuxiliar;
+        	
+        	if(listaVacia())
+        		cout<<"No hay ningun estudiante registrado, la lista esta vacia . . ."<<endl;
+        	else{
+        		nodoAuxiliar = start;
+        		cout<<"			--> Lista de Estudiantes <--		"<<endl;
+        			while(nodoAuxiliar != NULL){
+        				//cout<<"			--> Lista de Estudiantes <--		"<<endl;
+						cout<<"\n> Matricula: "<<nodoAuxiliar->getDato()<<"\n> Apellido Paterno: "<<nodoAuxiliar->getApPaternoE()<<"\n> Apellido Materno: "<<nodoAuxiliar->getApMaternoE()<<"\n> Nombre: "<<nodoAuxiliar->getNombreE()<<"\n"<<endl;
+						
+						if(nodoAuxiliar->obtieneSiguiente() == NULL){
+							cout<<"Ya no hay mas estudiantes, es el final de la lista. . ."<<endl;
+						}
+						
+						nodoAuxiliar = nodoAuxiliar->obtieneSiguiente();
+						
+					}
+			}
+
+        }
+
+        void mostrarCalificaciones(){
+			
+			NodoCE *nodoAuxiliar;
+			
+			if(listaVacia())
+				cout<<"No hay ningun estudiante registrado, la lista esta vacia . . ."<<endl;
+			else{
+				nodoAuxiliar = start;
+				cout<<" 			--> Mostrar calificaciones <--				"<<endl;
+					while(nodoAuxiliar != NULL){
+						cout<<"\n> Matricula: "<<nodoAuxiliar->getDato()<<"\n> Apellido Paterno: "<<nodoAuxiliar->getApPaternoE()<<"\n> Apellido Materno: "<<nodoAuxiliar->getApMaternoE()<<"\n> Nombre: "<<nodoAuxiliar->getNombreE()<<"\n"<<endl;
+						if(nodoAuxiliar->getCalificacion() != -1){
+							cout<<"> Calificacion actual: "<<nodoAuxiliar->getCalificacion()<<endl;
+						} else {
+							cout<<"El estudiante "<<nodoAuxiliar->getNombreE()<<" aun no cuenta con una calificacion establecida. . ."<<endl;
+						}
+						if(nodoAuxiliar->obtieneSiguiente() == NULL){
+							cout<<"\nYa no hay mas estudiantes, es el final de la lista. . ."<<endl;
+						}
+						nodoAuxiliar = nodoAuxiliar->obtieneSiguiente();
+					}
+				}
+			
+        }
+/* 			--> Información a mostrar en reporte final:
+
+				1. Promedio general
+				2. Total de alumnos regulares
+				3. Total de alumnos en situación de riesgo de reprobar
+				4. Total de alumnos reprobados
+				
+*/
+        void mostrarReporteFinal(){
+			
+			NodoCE *nodoAuxiliar;
+			//Declaración de contadores
+			int contEstudiantes = 0;
+			int contERegulares = 0;
+			int contERiesgo = 0;
+			int contEReprobados = 0;
+			double promedioE = 0;
+			
+				cout<<"				--> REPORTE FINAL <--					      "<<endl;
+			
+			if(listaVacia()){
+				cout<<"No hay ningun estudiante registrado, la lista esta vacia . . ."<<endl;
+			} else {
+				nodoAuxiliar = start;
+					while(nodoAuxiliar != NULL){
+						if(nodoAuxiliar->getCalificacion()){
+							promedioE = promedioE + nodoAuxiliar->getCalificacion();
+							++contEstudiantes;
+							if(nodoAuxiliar->getCalificacion() >= 7){
+								++contERegulares;
+							} else if(nodoAuxiliar->getCalificacion() < 7 && nodoAuxiliar->getCalificacion() >= 6) {
+								++contERiesgo;
+							} else if(nodoAuxiliar->getCalificacion() < 6){
+								++contEReprobados;
+							}
+						}
+						nodoAuxiliar = nodoAuxiliar->obtieneSiguiente();
+					}
+				promedioE = promedioE / contEstudiantes;
+				
+//											--> Pantalla del reporte final <--
+
+				cout<<"> Promedio general: "<<promedioE<<"                               |"<<endl;
+				cout<<"> Total de alumnos regulares: "<<contERegulares<<endl;
+				cout<<"> Total de alumnos en situacion de riesgo: "<<contERiesgo<<endl;
+				cout<<"> Total de alumnos reprobados: "<<contEReprobados<<endl;
+				cout<<"				--> REPORTE FINAL <--					      "<<endl;
+								
+			}
+        }
+        
+/* Opciones que contendrá el menú de la Lista:
+    vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+    >    1.  Registrar Estudiante          <
+    >    2.  Actualizar Estudiante          <
+    >    3.  Registrar calificación         <
+    >    4.  Actualizar calificación        <
+    >    5.  Buscar estudiante              <
+    >    6.  Eliminar estudiante            <
+    >    7.  Mostrar listado de estudiantes <
+    >    8.  Mostrar calificaciones         <
+    >    9.  Mostrar reporte final          <
+    >    10. Salir                          <
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*/
+        
+        void menuControlEscolar(){
+        	
+        	ListaCE lista;
+        	
+        	int opc;
+        	string matriculaE;
+        	string nombreE;
+        	string apPaternoE;
+        	string apMaternoE;
+        	
+        	lista.inicializarLista();
+        	
+			do{	
+			//	lista.inicializarLista();
+				system("cls");
+	        	cout<<"*************************************************************************"<<endl;
+	        	cout<<"		--> M E N U  C O N T R O L  E S C O L A R <--				"<<endl;
+	        	cout<<"\n 1. Registrar estudiante \n 2. Actualizar estudiante \n 3. Registrar calificacion \n 4. Actualizar calificacion \n 5. Buscar estudiante"<<endl;
+	        	cout<<" 6. Eliminar estudiante \n 7. Mostrar listado de estudiantes \n 8. Mostrar calificaciones \n 9. Mostrar reporte final \n 10. Salir \n"<<endl;
+				cout<<"------_¯_-----_¯_\n-----_¦¦¦¯¯¯¯¯¦¦¦_\n-__--¦¦¦¦¦¦¦¦¦¦¦¦¦--__\n¦__¦-¦¦¦¯¦¦-¦¦¯¦¦¦-¦__¦"<<endl;
+	        	cout<<"*************************************************************************"<<endl;
+	    		cin>>opc;
+			
+			switch(opc){
+				case 1:
+					system("cls");
+					cout<<"				--> Registrar Estudiante <-- 			"<<endl;
+					cout<<"\n > Digite la matricula del Estudiante: "<<endl;
+					cin>>matriculaE;
+					cout<<" > Digite el nombre del Estudiante: "<<endl;
+					cin>>nombreE;
+					cout<<" > Digite el apellido paterno del Estudiante: "<<endl;
+					cin>>apPaternoE;
+					cout<<" > Digite el apellido materno del Estudiante: "<<endl;
+					cin>>apMaternoE;
+	        		lista.registrarEstudiante(matriculaE,nombreE,apPaternoE,apMaternoE);
+					cout<<"Espere un momento . . ."<<endl;
+					cout<<". . ."<<endl;
+					cout<<". ."<<endl;
+					cout<<"."<<endl;
+					//sleep(3);
+					cout<<"El estudiante ha sido registrado con exito!"<<endl;
+					system("pause");		
+				break;
+				case 2: 
+					system("cls");
+					cout<<"				--> Actualizar Estudiante <--				"<<endl;
+					cout<<"\n > Digite la matricula del Estudiante: "<<endl;
+					cin>>matriculaE;
+					lista.actualizarEstudiante(matriculaE);
+					system("pause");
+					break;
+				case 3: 
+					system("cls");
+					cout<<"				--> Registrar Calificacion <-- 			"<<endl;
+					cout<<"\n > Digite la matricula del Estudiante: "<<endl;
+					cin>>matriculaE;
+					lista.registrarCalificacion(matriculaE);
+					system("pause");
+					break;
+				case 4: 
+					system("cls");
+					cout<<"				--> Actualizar Calificacion <--				"<<endl;
+					cout<<"\n > Digite la matricula del Estudiante: "<<endl;
+					cin>>matriculaE;
+					lista.actualizarCalificacion(matriculaE);
+					system("pause");
+					break;
+				case 5: 
+					system("cls");
+					cout<<"				--> Buscar Estudiante <--				"<<endl;
+					cout<<"\n > Digite la matricula del Estudiante: "<<endl;
+					cin>>matriculaE;
+					lista.buscarEstudiante(matriculaE);
+					system("pause");
+					break;
+				case 6:
+					system("cls");
+					cout<<"				--> Eliminar Estudiante <--				"<<endl;
+					cout<<"\n > Digite la matricula del Estudiante: "<<endl;
+					cin>>matriculaE;
+					lista.eliminarEstudiante(matriculaE);
+					system("pause");
+					break;
+				case 7:
+					system("cls");
+					cout<<"				--> Listado de Estudiantes <--				"<<endl;
+					lista.mostrarListadoDeEstudiantes();
+					system("pause");
+					break;
+				case 8: 
+					system("cls");
+					cout<<"				--> Calificaciones <--				"<<endl;
+					lista.mostrarCalificaciones();
+					system("pause");
+					break;
+				case 9:
+					system("cls");
+					//cout<<"				--> Listado de Estudiantes <--				"<<endl;
+					lista.mostrarReporteFinal();
+					system("pause");
+					break;
+				case 10:
+					system("cls");
+					cout<<"Saliendo de Control Escolar . . ."<<endl;
+					system("pause"); 
+					break;
+			}
+        	
+		} while (opc != 10);
+		
+		//return 0;
+	}
+	
+};
+
+
+                                                        - > N O D O < -
+#include <string>
+using namespace std;
+
+class NodoCE{
+	
+	private:
+		
+		string matriculaE;
+        string nombreE;
+        string apPaternoE;
+        string apMaternoE;
+        double calificacion;
+		
+	public:
+		
+		NodoCE *siguiente;	// Guardará la posición de memoria, el apuntador
+		
+		NodoCE *crearNodo(string matriculaE, string nombreE, string apPaternoE, string apMaternoE){		//Cada que creemos un nodo nos regresará un elemento de tipo Nodo
+			NodoCE *nuevo = new NodoCE(); 	//Al hacer esto se crea en la memoria dinámica la posición de memoria
+			nuevo->matriculaE = matriculaE;		//En Nodo nuevo y memoria dinámica se guarda num
+			nuevo->nombreE = nombreE;
+            nuevo->apPaternoE = apPaternoE;
+            nuevo->apMaternoE = apMaternoE;
+            nuevo->calificacion = -1;
+            return nuevo;
+		}
+		
+		string getDato(){
+			return matriculaE;
+		}
+
+        string getNombreE(){
+            return nombreE;
+        } 
+
+        string getApPaternoE(){
+            return apPaternoE;
+        }
+
+        string getApMaternoE(){
+            return apMaternoE;
+        }
+
+        double getCalificacion(){
+            return calificacion;
+        }
+		
+		void conectar(NodoCE *next){		//Recibe posición de memoria del elemento con el que se conectará
+			siguiente = next;			//Posición de memoria pasa a apuntador 
+		}
+		
+		NodoCE *obtieneSiguiente(){
+			return siguiente;			//Sirve para preguntar si el apuntador del Nodo auxiliar es diferente de nulo
+		}
+
+        void setDato(string matriculaE){
+            matriculaE = matriculaE;
+        }
+
+        void setNombreE(string nombreE){
+            nombreE = nombreE;
+        }
+
+        void setApPaternoE(string apPaternoE){
+            apPaternoE = apPaternoE;
+        }
+
+        void setApMaternoE(string apMaternoE){
+            apMaternoE = apMaternoE;
+        }
+        
+        void setCalificacion(double calificacion){
+        	calificacion = calificacion;
+		}
+
+};
+----------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------[ Arbol ]-------------------------------------------------------------
+                                                          
+                                                          -> N O D O <-
+#include <iostream>
+class Nodo {
+
+private:
+	int identificador;
+public:
+	Nodo* apuntadorIzq;
+	Nodo* apuntadorDer;
+
+	Nodo* crear(int n) {
+		Nodo* nuevo = new Nodo();
+		nuevo->identificador = n;
+		nuevo->apuntadorIzq = NULL;
+		nuevo->apuntadorDer = NULL;
+		return nuevo;
+	}
+
+	int getIdentificador() {
+		return this->identificador;
+	}
+
+	Nodo* getApuntadorIzq() {
+		return apuntadorIzq;
+	}
+
+	Nodo* getApuntadorDer() {
+		return apuntadorDer;
+	}
+
+	void setApuntadorIzq(Nodo* next) {
+		apuntadorIzq = next;
+	}
+
+	void setApuntadorDer(Nodo* next) {
+		apuntadorDer = next;
+	}
+};
+
+
+                                                        -> A R B O L <-
+#include  <iostream>
+#include "Nodo.h"
+#include <string>
+#include <sstream>
+#include <stdio.h>  
+#include <windows.h>  
+
+using namespace std;
+
+class ArbolBB {
+
+private:
+
+	Nodo* raiz;
+
+	string NodosHermanos;
+	string NodosPadres;
+	string NodosHijos;
+	string NodosHojas;
+
+	bool arbolVacio() {
+		if (raiz == NULL)
+			return true;
+		else
+			return false;
+	}
+
+public:
+
+	void inicializarArbol() {
+		raiz = NULL;
+	}
+
+	Nodo* getRaiz() {
+		return raiz;
+	}
+
+	void insertar(int n) {
+		Nodo* nuevo{}, * aux;
+		nuevo = nuevo->crear(n);
+
+		if (arbolVacio())	//árbol es vacío
+			raiz = nuevo;
+		else {
+			siguienteNodo(raiz, nuevo);
+		}
+	}
+
+	void siguienteNodo(Nodo* aux, Nodo* nuevo) {
+		if (aux == NULL)
+			return;
+		else {
+			if (nuevo->getIdentificador() < aux->getIdentificador()) {	//RECORRER IZQUIERDA
+				if (aux->getApuntadorIzq() != NULL)
+					siguienteNodo(aux->getApuntadorIzq(), nuevo);
+				else
+					aux->setApuntadorIzq(nuevo);
+			}
+			else if (nuevo->getIdentificador() > aux->getIdentificador()) {	//RECORRER DERECHA
+				if (aux->getApuntadorDer() != NULL)
+					siguienteNodo(aux->getApuntadorDer(), nuevo);
+				else
+					aux->setApuntadorDer(nuevo);
+			}
+		}
+	}
+
+	int getLongitudProfundidad(Nodo* aux, int n, int longitud) {
+		if (aux != NULL) {
+			if (n != aux->getIdentificador()) {		//RECORRE ÁRBOL
+				if (n < aux->getIdentificador() && aux->getApuntadorIzq() != NULL)
+					getLongitudProfundidad(aux->getApuntadorIzq(), n, longitud + 1);
+				else if (aux->getApuntadorDer() != NULL)
+					getLongitudProfundidad(aux->getApuntadorDer(), n, longitud + 1);
+			}
+			else if (n == aux->getIdentificador())
+				return longitud;
+			else
+				return -1;
+		}
+		else
+			return -1;
+	}
+
+	int getProfundidad(Nodo* aux) {
+
+	}
+
+	// TAREA: Obtener Altura y obtener profundidad (saber en qué nivel se encuentra el elemento, raiz=0)
+
+	void getAlturaBB(Nodo* aux, int n) {
+		if (aux == NULL) {
+			return;
+		}
+		else {
+			if (aux->getIdentificador() == n) {
+				cout << getAltura(aux) << endl;
+			}
+			getAlturaBB(aux->getApuntadorIzq(), n);
+			getAlturaBB(aux->getApuntadorDer(), n);
+		}
+	}
+
+	int getAltura(Nodo* aux) {
+		if (aux != NULL) {
+			int contIzq, contDer;
+			contIzq = getLongitudProfundidad(aux->getApuntadorIzq(),0,0) + 1;
+			contDer = getLongitudProfundidad(aux->getApuntadorDer(),0,0) + 1;
+			if (contIzq > contDer) {
+				return contIzq;
+			}
+			else {
+				return contDer;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+	void eliminarNodoBB(Nodo* aux, int n) {
+		if (aux == NULL) {
+			return;
+		}
+		else if (aux->getIdentificador() == n) {
+			cout << "Nodo: " << aux->getIdentificador();
+			eliminarNodo(aux);
+			return;
+		}
+		else if (n < aux->getIdentificador()) {
+			eliminarNodoBB(aux->getApuntadorIzq(), n);
+		}
+		else {
+			eliminarNodoBB(aux->getApuntadorDer(), n);
+		}
+	}
+
+	void eliminarNodo(Nodo* aux){
+		if (aux == NULL) {
+			return;
+		}
+		else {
+			eliminarNodo(aux->getApuntadorIzq());
+			eliminarNodo(aux->getApuntadorDer());
+			cout << "\n Se eliminaran los nodos: " << aux->getIdentificador();
+			delete aux;
+		}
+	}
+
+	void preOrden(Nodo* aux) {
+		if (aux == NULL)
+			return;
+		else {
+			//Paso 1: imprime el dato del nodo actual
+			cout << aux->getIdentificador() << endl;
+			//Paso 2: recorre el árbol izquierdo
+			preOrden(aux->getApuntadorIzq());
+			//Paso 3: recorre el árbol derecho
+			preOrden(aux->getApuntadorDer());
+		}
+	}
+
+	void orden(Nodo* aux) {
+		if (aux == NULL)
+			return;
+		else {
+			//Paso 1: recorre el árbol izquierdo
+			orden(aux->getApuntadorIzq());
+			//Paso 2: imprime el nodo
+			cout << aux->getIdentificador() << endl;
+			//Paso 3: recorre el árbol derecho
+			orden(aux->getApuntadorDer());
+		}
+	}
+
+	void postOrden(Nodo* aux) {
+		if (aux == NULL)
+			return;
+		else {
+			//Paso 1: recorre el árbol izquierdo
+			orden(aux->getApuntadorIzq());
+			//Paso 2: recorre el árbol derecho
+			orden(aux->getApuntadorDer());
+			//Paso 3: imprime nodo
+			cout << aux->getIdentificador() << endl;
+		}
+	}
+
+	string getNodosHermanos(Nodo* aux) {
+		if (aux == NULL)
+			return "";
+		else {
+			if (aux->getApuntadorIzq() != NULL && aux->getApuntadorDer() != NULL) {
+				stringstream ssizq, ssder;
+				ssizq << aux->getApuntadorIzq()->getIdentificador();
+				ssder << aux->getApuntadorDer()->getIdentificador();
+				if (NodosHermanos == "")
+					NodosHermanos = "{" + ssizq.str() + " y " + ssder.str() + "}";
+				else
+					NodosHermanos = NodosHermanos + ", " + "{" + ssizq.str() + " y " + ssder.str() + "}";
+			}
+			getNodosHermanos(aux->getApuntadorIzq());
+			getNodosHermanos(aux->getApuntadorDer());
+		}
+		return NodosHermanos;
+	}
+
+	string getNodosPadres(Nodo* aux) {
+		if (aux == NULL)
+			return "";
+		else {
+			if (aux->getApuntadorIzq() != NULL || aux->getApuntadorDer() != NULL) {
+				stringstream ssnopa;
+				ssnopa << aux->getIdentificador();
+				if (NodosPadres == "")
+					NodosPadres = ssnopa.str();
+				else
+					NodosPadres = NodosPadres + ", " + ssnopa.str();
+			}
+			getNodosPadres(aux->getApuntadorIzq());
+			getNodosPadres(aux->getApuntadorDer());
+		}
+		return NodosPadres;
+	}
+
+	string getNodosHijos(Nodo* aux) {
+		if (aux == NULL)
+			return "";
+		else {
+			stringstream ssizq, ssder;
+			if (aux->getApuntadorIzq() != NULL) {
+				ssizq << aux->getApuntadorIzq()->getIdentificador();
+				if (NodosHijos == "")
+					NodosHijos = ssizq.str() + " " + ssder.str() + "}";
+				else
+					NodosHijos = NodosHijos + ", " + ssizq.str();
+			}
+			if (aux->getApuntadorDer() != NULL) {
+				ssder << aux->getApuntadorDer()->getIdentificador();
+				if (NodosHijos == "")
+					NodosHijos = ssizq.str() + " " + ssder.str();
+				else
+					NodosHijos = NodosHijos + ", " + ssder.str();
+			}
+			getNodosHijos(aux->getApuntadorIzq());
+			getNodosHijos(aux->getApuntadorDer());
+		}
+		return NodosHijos;
+	}
+
+	string getNodosHojas(Nodo* aux) {
+		if (aux == NULL)
+			return "";
+		else {
+			if (aux->getApuntadorIzq() == NULL && aux->getApuntadorIzq() == NULL) {
+				stringstream sshojas;
+				sshojas << aux->getIdentificador();
+				if (NodosHojas == "")
+					NodosHojas = sshojas.str();
+				else
+					NodosHojas = NodosHojas + ", " + sshojas.str();
+			}
+			getNodosHojas(aux->getApuntadorIzq());
+			getNodosHojas(aux->getApuntadorDer());
+		}
+		return NodosHojas;
+	}
+
+	//T E R M I N A R  V I E N D O  E L  V I D E O
+
+	void getArbol(Nodo* aux, int cont) {		//Árbol acostado
+		if (aux == NULL)
+			return;
+		else {
+			getArbol(raiz->apuntadorDer, cont + 1);
+			cout << aux->getIdentificador() << endl;
+			for (int i = 0; i < cont; i++) {
+
+			}
+		}
+	}
+
+	void mostrarArbol(Nodo* aux, int cont) {
+		if (aux == NULL) {	//Si el arbol está vacío
+			return;
+		}
+		else {
+			mostrarArbol(aux->apuntadorDer, cont + 1);
+			for (int i = 0; i < cont; i++) {
+				cout << "   ";
+			}
+			cout << aux->getIdentificador();
+			mostrarArbol(aux->apuntadorIzq, cont + 1);
+		}
+	}
+
+	void gotoxy(int x, int y) {
+		HANDLE hcon;
+			hcon = GetStdHandle(STD_OUTPUT_HANDLE);
+		COORD dwPos;
+			dwPos.X = x;
+			dwPos.Y = y;
+		SetConsoleCursorPosition(hcon, dwPos);
+	}
+
+	void background() {
+		int i = 2;
+		for (int y = 0; y < 7; y++) {
+			gotoxy(0, i);
+			cout << " Nivel " << y;
+			for (int x = 8; x < 135; x++) {
+				gotoxy(x, i);
+				cout << "- ";
+			}
+			i = i + 3;
+		}
+	}
+
+	void Show(Nodo* aux, int x, int y, int level) {
+		if (aux == NULL)
+			return;
+		else {
+			gotoxy(x, y);
+			cout << aux->getIdentificador();
+			switch (level) {
+				case 0:
+					Show(aux->getApuntadorIzq(), x - 30, y + 3, level + 1);
+					Show(aux->getApuntadorDer(), x + 30, y + 3, level + 1);
+					break;
+				case 1:
+					Show(aux->getApuntadorIzq(), x - 12, y + 3, level + 1);
+					Show(aux->getApuntadorDer(), x + 12, y + 3, level + 1);
+					break;
+				case 2:
+					Show(aux->getApuntadorIzq(), x - 7, y + 3, level + 1);
+					Show(aux->getApuntadorDer(), x + 7, y + 3, level + 1);
+					break;
+				case 3:
+					Show(aux->getApuntadorIzq(), x - 4, y + 3, level + 1);
+					Show(aux->getApuntadorDer(), x + 4, y + 3, level + 1);
+					break;
+				case 4:
+					Show(aux->getApuntadorIzq(), x - 2, y + 3, level + 1);
+					Show(aux->getApuntadorDer(), x + 2, y + 3, level + 1);
+					break;
+				case 5:
+					Show(aux->getApuntadorIzq(), x - 2, y + 3, level + 1);
+					Show(aux->getApuntadorDer(), x + 2, y + 3, level + 1);
+					break;
+			}
+		}
+	}
+
+
+			/* --> Opciones Menu <--
+		1. Inicializar
+		2. Agregar un nodo
+		3. Eliminar nodo
+		4. Recorrido preorden
+		5. Recorrido postorden
+		6. Recorrido orden
+		7. Mostrar altura
+		8. Mostrar profundidad
+		9. Mostrar longitud
+		10. Desplegar nodos hermanos
+		11. Desplegar el árbol completo junto a su formación
+		*/
+
+
+
+	void menuArbolBB() {
+		ArbolBB abb;
+		abb.inicializarArbol();
+		int opc, nodo, nodoP, nodoA, nodoE;
+		do{
+			cout << "Myriam Sanchez Pereyra\n" << endl;
+			cout << "		--> M E N U  A R B O L <--	" << endl;
+			cout << "												" << endl;
+			cout << "	> Seleccione la opcion que quiera realizar: " << endl;
+			cout << "												" << endl;
+			cout << " 1. Inicializar \n 2. Agregar un nodo \n 3. Eliminar nodo \n 4. Recorrido preorden \n 5. Recorrido postorden \n 6. Recorrido orden" << endl;
+			cout << " 7. Mostrar altura \n 8. Mostrar profundidad \n 9. Mostrar longitud \n 10. Mostrar arbol \n 11. Desplegar el arbol completo junto a su formacion" << endl;
+			cout << " 12. Salir " << endl;
+			cin >> opc;
+
+		switch (opc) {
+		case 1:
+			system("cls");
+			cout << " > Inicializando ArbolBB . . . " << endl;
+			
+			abb.inicializarArbol();
+			system("pause");
+			system("cls");
+			break;
+		case 2:
+			system("cls");
+			cout << " > Agregar un nodo " << endl;
+			cout << " Digite el nodo que desea agregar: " << endl;
+			cin >> nodo;
+			abb.insertar(nodo);
+			system("pause");
+			system("cls");
+			break;
+		case 3:
+			system("cls");
+			cout << " > Eliminar nodo " << endl;
+			cout << " Que nodo desea eliminar?" << endl;
+			cin >> nodoE;
+			abb.eliminarNodoBB(abb.getRaiz(), nodoE);
+			system("pause");
+			system("cls");
+			break;
+		case 4:
+			system("cls");
+			cout << " > Recorrido preorden " << endl;
+			abb.preOrden(abb.getRaiz());
+			system("pause");
+			system("cls");
+			break;
+		case 5:
+			system("cls");
+			cout << " > Recorrido postorden " << endl;
+			abb.postOrden(abb.getRaiz());
+			system("pause");
+			system("cls");
+			break;
+		case 6:
+			system("cls");
+			cout << " > Recorrido orden " << endl;
+			abb.orden(abb.getRaiz());
+			system("pause");
+			system("cls");
+			break;
+		case 7:
+			system("cls");
+			cout << " > Mostrar altura " << endl;
+			cout << " Digite el nodo del que quiere la altura: " << endl;
+			cin >> nodoA;
+			abb.getAlturaBB(abb.getRaiz(), nodoA);
+			system("pause");
+			system("cls");
+			break;
+		case 8:
+			system("cls");
+			cout << " > Mostrar profundidad " << endl;
+			cout << " Digitar el valor del nodo: " << endl;
+			cin >> nodoP;
+			cout << abb.getLongitudProfundidad(abb.getRaiz(), nodoP, 0) << endl;
+			system("pause");
+			system("cls");
+			break;
+		case 9:
+			system("cls");
+			cout << " > Mostrar longitud " << endl;
+			cout << " Digitar el valor del nodo: " << endl;
+			cin >> nodoP;
+			cout << abb.getLongitudProfundidad(abb.getRaiz(), nodoP, 0) << endl;
+			system("pause");
+			system("cls");
+			break;
+		case 10:
+			system("cls");
+			cout << " > Mostrar Arbol " << endl;
+			cout << " Nodos Padres: " + abb.getNodosPadres(abb.getRaiz());
+			cout << "\n Nodos Hijos: " + abb.getNodosHijos(abb.getRaiz());
+			cout << "\n Nodos Hermanos: " + abb.getNodosHermanos(abb.getRaiz());
+			cout << "\n Nodos Hojas: " + abb.getNodosHojas(abb.getRaiz());
+			system("pause");
+			system("cls");
+			break;
+		case 11:
+			system("cls");
+			cout << " > Desplegando arbol completo " << endl;
+			abb.background();
+			abb.Show(abb.getRaiz(), 70, 2, 0);
+			system("pause");
+			system("cls");
+			break;
+		case 12:
+			system("cls");
+			cout << " > Saliendo de Menu Arbol . . . " << endl;
+			system("pause");
+			system("cls");
+			break;
+		}
+		} while (opc != 12);
+	}
+};
+
+----------------------------------------------------------------------------------------------------------------------------------
