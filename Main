@@ -4,11 +4,19 @@
 #include<windows.h>
 #include <time.h>
 #include <unistd.h>
+#include "aux1.h"
+#include "ArbolBB.h"
 
 using namespace std;
 
+//push mete pop saca
+
 void gotoxy(int,int);
 int tiempo(int);
+int esperando, cont, proceso, cont2, tie, pos=10, pos2=70;
+string name;
+ArbolBB q;//aqui
+//Nodo*arbol = NULL;//aqui
 
 int main(){
 		system("color 80");
@@ -18,31 +26,12 @@ int main(){
 }
 
 int tiempo(int n){
-	for(int i=0; i<=180; i++){
-	/*	if(p.colaVacia()){
-			nombre();
-		}else{
-			if(llega==0){
-				llega=espera();
-				nombre();
-				cont ++;
-			}else{
-				llega--;
-			}
-		}
-		if(caja==0){
-			name=p.pop();
-			caja=atencion();
-			cont2++;
-		}else{
-			caja --;
-		}*/
+for(int i=0; i<=180; i++){
 		
-	
-	int longitud = strlen("TAREAS EN ESPERA");
+	int longitud = strlen("TAREAS EN esperando");
 	int ctext=31-(longitud/2);
 	gotoxy(ctext,n+2);
-	cout << "TAREAS EN ESPERA" <<endl;
+	cout << "TAREAS EN esperando" <<endl;
 	
 	int longitud2 = strlen("TAREAS EN PROCESAMIENTO");
 	int ctext2=100-(longitud2/2);
@@ -84,9 +73,35 @@ int tiempo(int n){
 	for(int i=11; i<14; i++){
 			gotoxy(135,i);cout<<"|";	
 	}	
-
+	
+		if(p.colaVacia()){
+			nombre();
+		}else{
+			if(esperando==0){
+				esperando=espera();
+				nombre();
+				cont ++;//saber cuantos estan en espera
+			}else{
+				esperando--;
+			}
+		}
+		if(proceso==0){
+			name=p.pop();
+			q.insertar(n);//aqui
+			proceso=atencion();
+			tie=proceso;
+			cont2++;//saber cuantos estuvieron en proceso
+		}else{
+			proceso --;
+		}
+		
+		gotoxy(pos2,15);cout<<"Tarea:  "<<name;
+		gotoxy(pos2,16);cout<<"Tiempo: "<<tie<<" minutos";
+		gotoxy(pos2,17);cout<<"Faltan: "<<proceso<<" minutos para cerrar el proceso";
+	
 		sleep(1);
-	}
+		system("cls");
+}
 	
 
 }
@@ -98,8 +113,3 @@ void gotoxy(int x, int y){
 		dwPos.Y = y;
 		SetConsoleCursorPosition(hcon,dwPos);
 }
-
-
-
-
-
