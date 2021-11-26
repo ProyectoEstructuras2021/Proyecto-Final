@@ -6,15 +6,18 @@
 #include <unistd.h>
 #include "aux1.h"
 #include "ArbolBB.h"
+#include <sstream>
 
 using namespace std;
 
 //push mete pop saca
 
 void gotoxy(int,int);
+Nodo*arbol = NULL;
 int tiempo(int);
 int esperando, cont, proceso, cont2, tie, pos=10, pos2=70;
 string name;
+stringstream ss;
 ArbolBB q;//aqui
 //Nodo*arbol = NULL;//aqui
 
@@ -26,7 +29,7 @@ int main(){
 }
 
 int tiempo(int n){
-for(int i=0; i<=180; i++){
+for(int i=0; i<=20; i++){
 		
 	int longitud = strlen("TAREAS EN esperando");
 	int ctext=31-(longitud/2);
@@ -87,6 +90,8 @@ for(int i=0; i<=180; i++){
 		}
 		if(proceso==0){
 			name=p.pop();
+			ss >> name;  
+  			ss << n; 
 			q.insertar(n);//aqui
 			proceso=atencion();
 			tie=proceso;
@@ -98,12 +103,16 @@ for(int i=0; i<=180; i++){
 		gotoxy(pos2,15);cout<<"Tarea:  "<<name;
 		gotoxy(pos2,16);cout<<"Tiempo: "<<tie<<" minutos";
 		gotoxy(pos2,17);cout<<"Faltan: "<<proceso<<" minutos para cerrar el proceso";
+		
+		gotoxy(pos2,19);
+		
 	
 		sleep(1);
 		system("cls");
+		
 }
 	
-
+	q.mostrarArbol(arbol,0);	
 }
 
 void gotoxy(int x, int y){
@@ -113,6 +122,5 @@ void gotoxy(int x, int y){
 		dwPos.Y = y;
 		SetConsoleCursorPosition(hcon,dwPos);
 }
-
 
 
